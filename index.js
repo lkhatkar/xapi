@@ -15,13 +15,13 @@ export class XAPI {
     this.actor = actor;
   }
 
-  buildStatement({ verb, object, result, context }) {
+  buildStatement({actor, verb, object, result, context }) {
     if (!verb || !object) {
       throw new Error("verb and object are mandatory in a statement");
     }
 
     return {
-      actor: this.actor,
+      actor,
       verb,
       object,
       ...(result && { result }),
@@ -51,9 +51,71 @@ export class XAPI {
     return response.json();
   }
 
-  async sendStatement({ verb, object, result = null, context = null }) {
-    const st = this.buildStatement({ verb, object, result, context });
+  async sendStatement({ actor=this.actor, verb, object, result = null, context = null }) {
+    const st = this.buildStatement({actor, verb, object, result, context });
     return await this.send(st);
+  }
+ /**
+ * Fetch statements with full xAPI query support
+ * (Compatible with SCORM Cloud & 1.0.3 spec)
+ *
+ * @param {Object} filters
+ * @param {Object} [filters.agent]   xAPI Agent object
+ * @param {string} [filters.verb]    verb ID
+ * @param {string} [filters.activity] activity ID
+ * @param {string} [filters.since]   ISO date string
+ * @param {string} [filters.until]   ISO date string
+ * @param {boolean} [filters.related_activities]
+ * @param {boolean} [filters.related_agents]
+ * @param {number} [filters.limit]
+ * @param {boolean} [filters.descending]
+ * @param {string} [filters.cursor]  SCORM Cloud "more" URL
+ *
+ * @returns {Promise<Object>} full LRS response
+ */
+  async getStatements(filters = {}) {
+    const auth = btoa(`${this.username}:${this.password}`);
+
+    const params = new URLSearchParams();
+
+    if (filters.agent && filters.agent !== '*') {
+      params.append("agent", JSON.stringify(filters.agent));
+    }
+
+    if (filters.verb) params.append("verb", filters.verb);
+    if (filters.activity) params.append("activity", filters.activity);
+    if (filters.since) params.append("since", filters.since);
+    if (filters.until) params.append("until", filters.until);
+
+    if (filters.related_activities !== undefined) {
+      params.append("related_activities", String(filters.related_activities));
+    }
+
+    if (filters.related_agents !== undefined) {
+      params.append("related_agents", String(filters.related_agents));
+    }
+
+    if (filters.limit) params.append("limit", filters.limit);
+    if (filters.descending) params.append("descending", "true");
+
+    // SCORM Cloud “more” pagination
+    const url = filters.cursor
+      ? filters.cursor
+      : `${this.endpoint}?${params.toString()}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "X-Experience-API-Version": "1.0.3",
+        "Authorization": `Basic ${auth}`
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`xAPI fetch error ${response.status}: ${text}`);
+    }
+
+    return response.json();
   }
 }
 

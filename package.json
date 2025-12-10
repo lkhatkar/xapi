@@ -1,6 +1,6 @@
 {
   "name": "@lkhatkar/xapi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Minimal and production-ready xAPI Activity Provider client.",
   "main": "index.js",
   "type": "module",

@@ -21,13 +21,18 @@ const xapi = new XAPI({
   }
 });
 
-xapi.sendStatement({
-  verb: Verbs.interacted,
-  object: {
-    id: "app://ship/rudder",
-    definition: { name: { "en-US": "Rudder Control" } }
-  },
-  result: {
-    response: "Adjusted rudder to 5° port"
-  }
+// Send a statement
+await xapi.sendStatement({
+  verb: StandardVerbs.completed,
+  object: { id: "https://example.com/course/1", objectType: "Activity" },
+  result: { score: { scaled: 0.95 }, completion: true }
 });
+
+//get statements
+const latest = await xapi.getStatements({
+  agent: { mbox: "mailto:test@example.com" },
+  verb: "http://adlnet.gov/expapi/verbs/completed",
+  limit: 5
+});
+
+console.log(latest);
