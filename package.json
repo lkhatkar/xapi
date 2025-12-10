@@ -1,0 +1,17 @@
+{
+  "name": "@ari/xapi",
+  "version": "1.0.0",
+  "description": "Minimal and production-ready xAPI Activity Provider client.",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "xapi",
+    "tincan",
+    "experience api",
+    "lrs",
+    "learning",
+    "activity provider"
+  ],
+  "author": "lkhatkar@arisimulation.com",
+  "license": "MIT"
+}

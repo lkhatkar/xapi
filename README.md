@@ -1,2 +1,8 @@
-# xapi-apc
-Minimal and production-ready xAPI Activity Provider client
+# @example/xapi
+
+A minimal, production-ready **xAPI Activity Provider** library for JavaScript projects.
+
+## Installation
+
+```sh
+npm install @example/xapi
