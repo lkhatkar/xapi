@@ -1,6 +1,6 @@
 {
-  "name": "@ari/xapi",
-  "version": "1.0.0",
+  "name": "@lkhatkar/xapi",
+  "version": "1.0.1",
   "description": "Minimal and production-ready xAPI Activity Provider client.",
   "main": "index.js",
   "type": "module",
@@ -12,6 +12,6 @@
     "learning",
     "activity provider"
   ],
-  "author": "lkhatkar@arisimulation.com",
+  "author": "lalgulab.khatkar@gmail.com",
   "license": "MIT"
 }
