@@ -51,6 +51,19 @@ export class XAPI {
     return response.json();
   }
 
+  /**
+   * Fetch statements with full xAPI query support
+   * (Compatible with SCORM Cloud & 1.0.3 spec)
+   * 
+   * @param {Object} params 
+   * @param {Object} [params.actor] 
+   * @param {Object} [params.verb] 
+   * @param {Object} [params.object] 
+   * @param {Object} [params.result] 
+   * @param {Object} [params.context] 
+   * 
+   * * @returns {Promise<Object>} full LRS response
+   */
   async sendStatement({ actor=this.actor, verb, object, result = null, context = null }) {
     const st = this.buildStatement({actor, verb, object, result, context });
     return await this.send(st);
